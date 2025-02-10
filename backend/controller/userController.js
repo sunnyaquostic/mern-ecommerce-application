@@ -2,6 +2,7 @@ import handleAsyncError from "../middleware/handleAsyncError.js"
 import User from "../models/userModel.js"
 import HandleError from "../utils/handleError.js"
 import { sendToken } from "../utils/jwtToken.js"
+import { sendEmail } from "../utils/sendEmail.js"
 export const registerUser = handleAsyncError(async(req, res, next) => {
     const {name, email, password} = req.body
 
@@ -73,7 +74,16 @@ export const requestPasswordReset = handleAsyncError(async (req, res, next) => {
                     \n\n If you didtn't request a password reset, please ignore this message.`;
 
     try {
-        
+        await sendEmail({
+            email:user.email,
+            subject: 'Password reset request',
+            message
+        })
+
+        res.status(200).json({
+            success: true,
+            message: `Email is sent to ${user.email} successfully`
+        })
     } catch (error) {
         user.reseetPasswordToken = undefined
         user.resetPasswordExpire = undefined
