@@ -98,3 +98,11 @@ export const getSingleProduct = handleAsyncError( async (req, res, next) => {
         product
     })
 })
+
+export const getAdminProducts= handleAsyncError(async (req, res, next) => {
+    const products = await Product.find()
+    res.status(200).json({
+        success: true,
+        products
+    })
+})

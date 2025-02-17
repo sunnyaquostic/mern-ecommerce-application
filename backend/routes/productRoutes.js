@@ -1,19 +1,28 @@
 import express  from  'express'
-import { createProducts, deleteProduct, getAllProducts, getSingleProduct, updateProduct } from '../controller/productController.js'
+import { createProducts, 
+    deleteProduct, 
+    getAdminProducts, 
+    getAllProducts, 
+    getSingleProduct, 
+    updateProduct 
+} from '../controller/productController.js'
 import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
 
 const router = express.Router()
 
 // Routes
-router.route("/products")
-.get(verifyUserAuth, getAllProducts)
-.post(verifyUserAuth, roleBasedAccess('admin'), createProducts)
+router.route("/products").get(getAllProducts)
 
+router.route("/admin/products").get(verifyUserAuth, roleBasedAccess('admin'), getAdminProducts)
 
-router.route("/product/:id")
+router.route("/admin/product/create").post(verifyUserAuth, roleBasedAccess('admin'), createProducts)
+
+router.route("/admin/product/:id")
 .put(verifyUserAuth, roleBasedAccess('admin'), updateProduct)
 .delete(verifyUserAuth, roleBasedAccess('admin'), deleteProduct)
-.get(verifyUserAuth, getSingleProduct)
+
+router.route("/product/:id").get(getSingleProduct)
+// .get(verifyUserAuth, getSingleProduct)
 // router.route("/product").get(getSingleProduct)
 
 export default router
