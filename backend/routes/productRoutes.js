@@ -4,7 +4,9 @@ import { createProducts,
     getAdminProducts, 
     getAllProducts, 
     getSingleProduct, 
-    updateProduct 
+    updateProduct,
+    createReviewForProduct, 
+    getProductReviews
 } from '../controller/productController.js'
 import { roleBasedAccess, verifyUserAuth } from '../middleware/userAuth.js'
 
@@ -22,7 +24,8 @@ router.route("/admin/product/:id")
 .delete(verifyUserAuth, roleBasedAccess('admin'), deleteProduct)
 
 router.route("/product/:id").get(getSingleProduct)
-// .get(verifyUserAuth, getSingleProduct)
-// router.route("/product").get(getSingleProduct)
+router.route("/review").put(verifyUserAuth, createReviewForProduct)
+router.route("/reviews").get(getProductReviews)
+
 
 export default router
