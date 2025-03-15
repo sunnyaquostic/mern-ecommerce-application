@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import '../pageStyles/Home.css';
 import ImageSlider from '../components/ImageSlider';
 import Product from '../components/Product';
+import PageTitle from '../components/PageTitle';
 
 const products = [
   {
@@ -79,6 +80,7 @@ const products = [
 function Home() {
   return (
     <>
+      <PageTitle title="Home Page" />
       <Navbar />
       <ImageSlider />
       <div className="home-container">
