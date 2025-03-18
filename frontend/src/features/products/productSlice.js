@@ -17,7 +17,7 @@ const productSlice = createSlice({
     name: 'product',
     initialState : {
         products: [],
-        productCount: 0,
+        productCount: 0, 
         loading: false,
         error: null
     },
