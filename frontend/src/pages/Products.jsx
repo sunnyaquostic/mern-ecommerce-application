@@ -8,19 +8,23 @@ import Product from '../components/Product'
 import { getProduct, removeErrors } from '../features/products/productSlice'
 import { toast } from 'react-toastify'
 import Loader from '../components/Loader'
+import { useLocation } from 'react-router-dom'
 
 function Products() {
   const { loading, error, products} = useSelector(state => state.product)
   const dispatch = useDispatch()
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const keyword = searchParams.get('keyword')
 
     useEffect(() => {
-      dispatch(getProduct())
-    },[dispatch])
+      dispatch(getProduct({keyword}))
+    },[dispatch, keyword])
 
     useEffect(() => {
       if (error) {
         toast.error(error.message, {position:'top-center', autoClose:3000})
-        dispatch(removeErrors)
+        dispatch(removeErrors())
       }
     },[dispatch, error])
 
