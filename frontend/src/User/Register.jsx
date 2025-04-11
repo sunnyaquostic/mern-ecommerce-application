@@ -71,7 +71,7 @@ function Register() {
     },[dispatch, success])
 
   return (
-    <div className="form-container container">
+    <div className=" container form-container">
         <div className="form-content">
             <form className="form" encType='multipart/formData'>
                 <h2>Sign Up</h2>
