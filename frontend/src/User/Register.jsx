@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../UserStyles/Form.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { useSelector, useDispatch } from 'react-redux'
+import { register, removeErrors, removeSuccess } from '../features/user/userSlice'
 
 function Register() {
     const [user, setUser] = useState({
@@ -12,6 +15,9 @@ function Register() {
     const [avatar, setAvatar] = useState('')
     const [avatarPreview, setAvatarPreview] = useState('./images/pix.JPG')
     const {name, email, password} = user
+    const {success, loading, error} = useSelector(state => state.user)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const registerDataChange = (e) => {
         if(e.target.name === 'avatar') {
             const reader = new FileReader()
@@ -29,10 +35,45 @@ function Register() {
         }
     }
 
+    const registerSubmit =(e) => {
+        e.preventDefault();
+        if (!name || !email || !password) {
+            toast.error("Please fill out all the required field", {position: 'top-center', autoClose:3000})
+            return
+        }
+
+        const myForm = new FormData();
+        myForm.set('name', name)
+        myForm.set('email', email)
+        myForm.set('password', password)
+        myForm.set('avatar', avatar)
+
+        for(let pair of myForm.entries()) {
+            console.log(pair[0] + '-' + pair[1]);
+        }
+
+        dispatch(register(myForm))
+    }
+
+    useEffect(() => {
+    if (error) {
+        toast.error(error, {position:'top-center', autoClose:3000})
+        dispatch(removeErrors())
+    }
+    },[dispatch, error])
+
+    useEffect(() => {
+    if (success) {
+        toast.success('Registration Successful', {position:'top-center', autoClose:3000})
+        dispatch(removeSuccess())
+        navigate('/login')
+    }
+    },[dispatch, success])
+
   return (
     <div className="form-container container">
         <div className="form-content">
-            <form className="form">
+            <form className="form" encType='multipart/formData'>
                 <h2>Sign Up</h2>
                 <div className="input-group">
                     <input type="text" placeholder='Username' name='name' value={name} onChange={registerDataChange}/>
