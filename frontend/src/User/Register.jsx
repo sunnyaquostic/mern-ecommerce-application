@@ -73,7 +73,7 @@ function Register() {
   return (
     <div className=" container form-container">
         <div className="form-content">
-            <form className="form" encType='multipart/formData'>
+            <form className="form" encType='multipart/formData' onSubmit={registerSubmit}>
                 <h2>Sign Up</h2>
                 <div className="input-group">
                     <input type="text" placeholder='Username' name='name' value={name} onChange={registerDataChange}/>
@@ -88,7 +88,7 @@ function Register() {
                     <input type="file" name='avatar' className='file-input' accept='image/' onChange={registerDataChange}/>
                     <img src={avatarPreview} alt="Avatar Preview" className='avatar'/>
                 </div>
-                <button className="authBtn">Sign Up</button>
+                <button className="authBtn">{loading ? 'Signing up...' : 'Sign Up'}</button>
                 <p className="form-links">
                     Already have an account? <Link to="/login">Sign in here</Link> 
                 </p>

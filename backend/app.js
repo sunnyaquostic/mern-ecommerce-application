@@ -4,12 +4,15 @@ import register from './routes/userRoutes.js'
 import order from './routes/orderRoutes.js'
 import errorHandleMiddleware from './middleware/error.js'
 import cookieParser from 'cookie-parser'
+import fileUpload from 'express-fileupload'
+
 
 const app = express();
 
 // middleware
 app.use(express.json())
 app.use(cookieParser())
+app.use(fileUpload())
 
 // Routes
 app.use("/api/v1", product)
