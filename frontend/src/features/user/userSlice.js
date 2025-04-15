@@ -55,6 +55,20 @@ export const logout = createAsyncThunk('user/logout', async (_, {rejectWithValue
     }
 })
 
+export const updateProfile = createAsyncThunk('user/updateProfile', async (userData, {rejectWithValue}) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+        const {data} = await axios.put('/api/v1/profile/update', userData, config)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || { message: 'Profile update failed' })
+    }
+})
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -62,7 +76,8 @@ const userSlice = createSlice({
         loading: false,
         error: null,
         success: false,
-        isAuthenticated: false
+        isAuthenticated: false,
+        message: null
     }, 
 
     reducers: {
@@ -137,12 +152,28 @@ const userSlice = createSlice({
         .addCase(logout.fulfilled, (state, action) => {
             state.loading = false,
             state.error   = null,
-            state.user    = null
+            state.user    = null,
             state.isAuthenticated = false
         })
         .addCase(logout.rejected, (state, action) => {
             state.loading = false,
             state.error   = action.payload?.message || 'Logout Failed'
+        })
+
+        builder.addCase(updateProfile.pending, (state) => {
+            state.loading = true,
+            state.error   = null
+        })
+        .addCase(updateProfile.fulfilled, (state, action) => {
+            state.loading = false,
+            state.error   = null,
+            state.user    = action.payload?.user || null,
+            state.message    = action.payload?.message,
+            state.success    = action.payload?.success
+        })
+        .addCase(updateProfile.rejected, (state, action) => {
+            state.loading = false,
+            state.error   = action.payload?.message || 'Profile update failed'
         })
     }
 })
