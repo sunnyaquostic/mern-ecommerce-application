@@ -10,6 +10,7 @@ import { loadUser } from './features/user/userSlice'
 import UserDashboard from './User/UserDashboard'
 import Profile from './User/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
+import UpdateProfile from './User/UpdateProfile'
 
 function App() {
   const {isAuthenticated, user} = useSelector(state => state.user)
@@ -28,6 +29,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<ProtectedRoute element={<Login />} />} />
       </Routes>
