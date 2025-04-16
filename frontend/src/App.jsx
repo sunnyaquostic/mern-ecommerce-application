@@ -28,10 +28,10 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
-        <Route path="/profile" element={<Profile />} />
         <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<ProtectedRoute element={<Login />} />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
     </Router>
