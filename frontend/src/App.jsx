@@ -11,6 +11,7 @@ import UserDashboard from './User/UserDashboard'
 import Profile from './User/Profile'
 import ProtectedRoute from './components/ProtectedRoute'
 import UpdateProfile from './User/UpdateProfile'
+import UpdatePassword from './User/UpdatePassword'
 
 function App() {
   const {isAuthenticated, user} = useSelector(state => state.user)
@@ -29,6 +30,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
+        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
