@@ -69,6 +69,20 @@ export const updateProfile = createAsyncThunk('user/updateProfile', async (userD
     }
 })
 
+export const updatePassword = createAsyncThunk('user/updatePassword', async (formData, {rejectWithValue}) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const {data} = await axios.put('/api/v1/password/update', formData, config)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || 'Password update failed')
+    }
+})
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -174,6 +188,20 @@ const userSlice = createSlice({
         .addCase(updateProfile.rejected, (state, action) => {
             state.loading = false,
             state.error   = action.payload?.message || 'Profile update failed'
+        })
+
+        builder.addCase(updatePassword.pending, (state) => {
+            state.loading = true,
+            state.error   = null
+        })
+        .addCase(updatePassword.fulfilled, (state, action) => {
+            state.loading = false,
+            state.error   = null,
+            state.success    = action.payload?.success
+        })
+        .addCase(updatePassword.rejected, (state, action) => {
+            state.loading = false,
+            state.error   = action.payload?.message || 'Password update failed'
         })
     }
 })
