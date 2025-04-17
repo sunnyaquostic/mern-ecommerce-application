@@ -69,7 +69,21 @@ export const updateProfile = createAsyncThunk('user/updateProfile', async (userD
     }
 })
 
-export const updatePassword = createAsyncThunk('user/updatePassword', async (formData, {rejectWithValue}) => {
+export const updatePassword = createAsyncThunk('user/forgotPassword', async (email, {rejectWithValue}) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const {data} = await axios.post('/api/v1/password/forgot', email, config)
+        return data
+    } catch (error) {
+        return rejectWithValue(error.response?.data || {message: 'Password update failed'})
+    }
+})
+
+export const forgotPassword = createAsyncThunk('user/updatePassword', async (formData, {rejectWithValue}) => {
     try {
         const config = {
             headers: {
@@ -79,7 +93,7 @@ export const updatePassword = createAsyncThunk('user/updatePassword', async (for
         const {data} = await axios.put('/api/v1/password/update', formData, config)
         return data
     } catch (error) {
-        return rejectWithValue(error.response?.data || 'Password update failed')
+        return rejectWithValue(error.response?.data || 'Email sent failed')
     }
 })
 
@@ -202,6 +216,21 @@ const userSlice = createSlice({
         .addCase(updatePassword.rejected, (state, action) => {
             state.loading = false,
             state.error   = action.payload?.message || 'Password update failed'
+        })
+
+        builder.addCase(forgotPassword.pending, (state) => {
+            state.loading = true,
+            state.error   = null
+        })
+        .addCase(forgotPassword.fulfilled, (state, action) => {
+            state.loading = false,
+            state.error   = null,
+            state.success    = action.payload?.success
+            state.message    = action.payload?.message
+        })
+        .addCase(forgotPassword.rejected, (state, action) => {
+            state.loading = false,
+            state.error   = action.payload?.message || 'Email sent failed'
         })
     }
 })
