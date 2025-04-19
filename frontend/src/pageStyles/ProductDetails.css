@@ -92,10 +92,6 @@
     border-radius: 4px;
   }
   
-  .quantity-button:hover {
-    background: linear-gradient(to bottom, #E7E9EC, #D5D9D9);
-  }
-  
   .quantity-value {
     width: 50px;
     height: 35px;

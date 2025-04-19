@@ -12,12 +12,32 @@ import Loader from '../components/Loader'
 
 function ProductDetails() {
     const [userRating, setUserRating] = useState(0)
-    const handleRatingChange = (newRating) => {
-        setUserRating(newRating)
-    }
+    const [quantity, setQuantity] = useState(1)
     const { loading, error, product } = useSelector((state) => state.product)
     const dispatch = useDispatch()
     const {id} = useParams();
+
+    const handleRatingChange = (newRating) => {
+        setUserRating(newRating)
+    }
+
+    const increaseQuantity = () => {
+        if (product.stock <= quantity) {
+            toast.error('Cannot exceed available Stock', {position:'top-center', autoClose:3000})
+            dispatch(removeErrors())
+            return;
+        }
+        setQuantity(qty => qty + 1)
+    }
+
+    const decreaseQuantity = () => {
+        if (quantity <= 1) {
+            toast.error('Quantity cannot be less than 1', {position:'top-center', autoClose:3000})
+            dispatch(removeErrors())
+            return;
+        }
+        setQuantity(qty => qty - 1)
+    }
 
     useEffect(() => {
         if(id) {
@@ -89,9 +109,9 @@ function ProductDetails() {
                         product.stock > 0 && (<>
                             <div className="quantity-controls">
                                 <span className="quantity-label">Quantity :</span>
-                                <button className="quantity-button">-</button>
-                                <input type="text" value={1} readOnly className='quantity-value' />
-                                <button className="quantity-button">+</button>
+                                <button className="quantity-button" onClick={decreaseQuantity}>-</button>
+                                <input type="text" value={quantity} readOnly className='quantity-value' />
+                                <button className="quantity-button" onClick={increaseQuantity}>+</button>
                             </div>
 
                             <button className="add-to-cart-btn">
