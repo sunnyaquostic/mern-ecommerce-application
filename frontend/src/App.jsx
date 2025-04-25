@@ -14,6 +14,7 @@ import UpdateProfile from './User/UpdateProfile'
 import UpdatePassword from './User/UpdatePassword'
 import ForgotPassword from './User/ForgotPassword'
 import ResetPassword from './User/ResetPassword'
+import Cart from './Cart/Cart'
 
 function App() {
   const {isAuthenticated, user} = useSelector(state => state.user)
@@ -38,6 +39,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/reset/:token" element={<ResetPassword />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
     </Router>
