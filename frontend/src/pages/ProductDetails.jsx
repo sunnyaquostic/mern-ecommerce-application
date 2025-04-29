@@ -15,7 +15,7 @@ function ProductDetails() {
     const [userRating, setUserRating] = useState(0)
     const [quantity, setQuantity] = useState(1)
     const { loading, error, product } = useSelector((state) => state.product)
-    const {loading:cartLoading, error:cartError, success, message, cartItems} = useDispatch((state) => state.cart)
+    const {loading:cartLoading, error:cartError, success, message, cartItems} = useSelector((state) => state.cart)
     console.log(cartItems)
     const dispatch = useDispatch()
     const {id} = useParams();
@@ -111,7 +111,7 @@ function ProductDetails() {
 
                     <div className="product-rating">
                         <Rating value={product.ratings} disabled={true}/>
-                        <span className="productCadSpan">
+                        <span className="productCardSpan">
                             ({product.numberOfReviews} {product.numberOfReviews === 1 ? "Review" : "Reviews"})
                         </span>
                     </div>
