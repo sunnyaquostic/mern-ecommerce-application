@@ -30,7 +30,7 @@ const cartSlice = createSlice({
         success: false,
         message: null,
         removingId: null,
-        shippingInfo: {},
+        shippingInfo:  JSON.parse(localStorage.getItem('shippingInfo')) || {},
     },
 
     reducers: {
@@ -82,5 +82,5 @@ const cartSlice = createSlice({
     }
 })
 
-export const  { removeErrors, removeMessage, removeItemFromCart } = cartSlice.actions
+export const  { removeErrors, removeMessage, removeItemFromCart, saveShippingInfo } = cartSlice.actions
 export default cartSlice.reducer

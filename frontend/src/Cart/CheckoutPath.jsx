@@ -23,10 +23,10 @@ function CheckoutPath({activePath}) {
             <div 
                 className="checkoutPath-step" 
                 key={index} 
-                active={activePath===index ? true : false}
-                completed={activePath >= index ? true : false}
+                active={activePath===index ? 'true' : 'false'}
+                completed={activePath >= index ? 'true' : 'false'}
             >
-                <p className="checkoutPath-icon"><item.icon /></p>
+                <p className="checkoutPath-icon">{item.icon}</p>
                 <p className="checkoutPath-label">{item.label}</p>
             </div>
         ))}

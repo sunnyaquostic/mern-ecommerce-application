@@ -1,11 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../UserStyles/Shipping.css'
 import PageTitle from '../components/PageTitle'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CheckoutPath from './CheckoutPath'
+import { useDispatch, useSelector } from 'react-redux'
+import { Country, State, City } from 'country-state-city'
+import { toast } from 'react-toastify'
+import { saveShippingInfo } from '../features/cart/cartSlice'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 function Shipping() {
+    const {shippingInfo} = useSelector(state => state.cart)
+    const dispatch       = useDispatch()
+    const [address, setAddress] = useState(shippingInfo.address || "")
+    const [pinCode, setPinCode] = useState(shippingInfo.pinCode || "")
+    const [phoneNumber, setPhoneNumber] = useState(shippingInfo.phoneNumber || "")
+    const [country, setCountry] = useState(shippingInfo.country || "")
+    const [state, setState] = useState(shippingInfo.state || "")
+    const [city, setCity]   = useState(shippingInfo.city || "")
+    const navigate = useNavigate()
+
+    const shippingInfoSubmit = (e) => {
+        e.preventDefault()
+        if(phoneNumber.length !== 11) {
+            toast.error('Invalid phone numbe! It should be 10 digit', {position: "top-center", autoClose: 3000})
+            return 
+        }
+
+        dispatch(saveShippingInfo({address, pinCode, phoneNumber, country, state, city}))
+        navigate('/order/confirm')
+    }
+
   return (
     <>
         <PageTitle title="Shipping Info" />
@@ -16,44 +42,97 @@ function Shipping() {
                 Shipping Details
             </div>
 
-            <form className="shipping-form">
+            <form className="shipping-form" onSubmit={shippingInfoSubmit}>
                 <div className="shipping-section">
                     <div className="shipping-form-group">
                         <label htmlFor="address">Address</label>
-                        <input type="text" id='address' name='address' placeholder='Enter your address' />
+                        <input  
+                            type="text" 
+                            id='address' 
+                            name='address' 
+                            placeholder='Enter your address' 
+                            value={address} 
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
                     </div>
                     <div className="shipping-form-group">
                         <label htmlFor="pinCode">Pin Code</label>
-                        <input type="number" id='pinCode' name='pinCode' placeholder='Enter your pinCode' />
+                        <input 
+                            type="number" 
+                            id='pinCode' 
+                            name='pinCode' 
+                            placeholder='Enter your pinCode' 
+                            value={pinCode}
+                            onChange={(e) => setPinCode(e.target.value)}
+                        />
                     </div>
                     <div className="shipping-form-group">
                         <label htmlFor="phoneNumber">Phone Number</label>
-                        <input type="tel" id='phoneNumber' name='phoneNumber' placeholder='Enter your Phone Number' />
+                        <input 
+                            type="tel" 
+                            id='phoneNumber' 
+                            name='phoneNumber' 
+                            placeholder='Enter your Phone Number' 
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                        />
                     </div>
                 </div>
 
                 <div className="shipping-section">
                     <div className="shipping-form-group">
                         <label htmlFor="country">Country</label>
-                        <select name="country" id="country">
+                        <select 
+                            name="country" 
+                            id="country"
+                            value={country}
+                            onChange={(e) => {
+                                setCountry(e.target.value)
+                                setState("")
+                                setCity("")
+                            }}
+                        >
                             <option value="">select a country</option>
-                            <option value="US">United State</option>
-                            <option value="NG">Nigeria</option>
-                            <option value="IN">India</option>
+                            {Country && Country.getAllCountries().map((item) => (
+                                <option value={item.isoCode} key={item.isoCode}>{item.name}</option>
+                            ))}
                         </select>
                     </div>
-                    <div className="shipping-form-group">
-                        <label htmlFor="city">City</label>
-                        <select name="city" id="city">
-                            <option value="">select a City</option>
-                        </select>
-                    </div>
-                    <div className="shipping-form-group">
+
+                    {country && <div className="shipping-form-group">
                         <label htmlFor="state">State</label>
-                        <select name="state" id="state">
+                        <select 
+                            name="state" 
+                            id="state"
+                            value={state}
+                            onChange={(e) => {
+                                setState(e.target.value)
+                                setCity("")
+                            }}
+                        >
                             <option value="">select a state</option>
+                            {State && State.getStatesOfCountry(country).map((item) => (
+                                <option value={item.isoCode} key={item.isoCode}>{item.name}</option>
+                            ))}
                         </select>
-                    </div>
+                    </div>}
+
+                    {state && <div className="shipping-form-group">
+                        <label htmlFor="city">City</label>
+                        <select 
+                            name="city" 
+                            id="city"
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                        >
+                            <option value="">select a City</option>
+
+                            {City && City.getCitiesOfState(country, state).map((item) => (
+                                <option value={item.name} key={item.name}>{item.name}</option>
+                            ))}
+                        </select>
+                    </div>}
+
                 </div>
                 <button className="shipping-submit-btn">
                     Continue
